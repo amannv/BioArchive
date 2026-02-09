@@ -2,7 +2,7 @@ import { type Request, type Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken"
 import { userModel } from "../models/userSchema.js";
-import z, { string } from "zod";
+import z from "zod";
 
 export const signupUser = async (req: Request, res: Response) => {
   try {
@@ -27,7 +27,7 @@ export const signupUser = async (req: Request, res: Response) => {
     });
 
     if (userExists) {
-      return res.status(400).json({
+      return res.status(409).json({
         message: "User already exists",
       });
     }
@@ -53,6 +53,7 @@ export const signupUser = async (req: Request, res: Response) => {
 };
 
 export const loginUser = async (req: Request, res: Response) => {
+    try {
     const requiredBody = z.object({
       email: z.email(),
       password: z.string().min(6).max(20),
@@ -74,7 +75,7 @@ export const loginUser = async (req: Request, res: Response) => {
     });
 
     if(!userExist) {
-        return res.status(400).json({
+        return res.status(401).json({
             message: "User not exists",
         });
     }
@@ -82,14 +83,34 @@ export const loginUser = async (req: Request, res: Response) => {
     const passwordCompare = await bcrypt.compare(password, userExist.password);
 
     if(!passwordCompare) {
-        return res.status(400).json({
+        return res.status(401).json({
             message: "Password is incorrect",
+        });
+    }
+
+    if(!process.env.JWT_SECRET) {
+        console.error("JWT Secret is not initialized");
+        return res.status(500).json({
+            message: "Internal server error",
         });
     }
 
     const token = jwt.sign({
         id: userExist._id,
-    })
+        email,
+    }, process.env.JWT_SECRET);
 
+    if(token) {
+        return res.status(200).json({
+            token,
+            message: "User logged in successfuly",
+        });
+    }
 
-};
+} catch (e) {
+    console.error("Error while logging in", e );
+    return res.status(500).json({
+        message: "Internal server error",
+    });
+}
+}
