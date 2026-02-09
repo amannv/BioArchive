@@ -1,0 +1,1 @@
+{"root":["./src/server.ts","./src/controllers/usercontroller.ts","./src/db/db.ts","./src/models/blogpageschema.ts","./src/models/blogpostschema.ts","./src/models/profileschema.ts","./src/models/userschema.ts","./src/routes/userroute.ts"],"version":"5.9.2"}
