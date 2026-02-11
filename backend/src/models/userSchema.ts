@@ -6,4 +6,4 @@ const userSchema = new mongoose.Schema({
     role: { type: String, default: "user" },
 }, { timestamps: true });
 
-export const userModel = mongoose.model("User", userSchema);
+export const userModel = mongoose.model("User", userSchema);941

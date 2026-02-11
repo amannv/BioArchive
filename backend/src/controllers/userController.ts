@@ -1,7 +1,8 @@
 import { type Request, type Response } from "express";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken"
+import jwt from "jsonwebtoken";
 import { userModel } from "../models/userSchema.js";
+import { profileModel } from "../models/profileSchema.js";
 import z from "zod";
 
 export const signupUser = async (req: Request, res: Response) => {
@@ -40,6 +41,9 @@ export const signupUser = async (req: Request, res: Response) => {
     });
 
     if (response) {
+      await profileModel.create({
+        userId: response._id,
+      });
       return res.status(201).json({
         message: "User signed up successfully",
       });
@@ -53,7 +57,7 @@ export const signupUser = async (req: Request, res: Response) => {
 };
 
 export const loginUser = async (req: Request, res: Response) => {
-    try {
+  try {
     const requiredBody = z.object({
       email: z.email(),
       password: z.string().min(6).max(20),
@@ -71,46 +75,48 @@ export const loginUser = async (req: Request, res: Response) => {
     const { email, password } = parsedBody.data;
 
     const userExist = await userModel.findOne({
-        email,
+      email,
     });
 
-    if(!userExist) {
-        return res.status(401).json({
-            message: "User not exists",
-        });
+    if (!userExist) {
+      return res.status(401).json({
+        message: "User not exists",
+      });
     }
 
     const passwordCompare = await bcrypt.compare(password, userExist.password);
 
-    if(!passwordCompare) {
-        return res.status(401).json({
-            message: "Password is incorrect",
-        });
+    if (!passwordCompare) {
+      return res.status(401).json({
+        message: "Password is incorrect",
+      });
     }
 
-    if(!process.env.JWT_SECRET) {
-        console.error("JWT Secret is not initialized");
-        return res.status(500).json({
-            message: "Internal server error",
-        });
-    }
-
-    const token = jwt.sign({
-        id: userExist._id,
-        email,
-    }, process.env.JWT_SECRET);
-
-    if(token) {
-        return res.status(200).json({
-            token,
-            message: "User logged in successfuly",
-        });
-    }
-
-} catch (e) {
-    console.error("Error while logging in", e );
-    return res.status(500).json({
+    if (!process.env.JWT_SECRET) {
+      console.error("JWT Secret is not initialized");
+      return res.status(500).json({
         message: "Internal server error",
+      });
+    }
+
+    const token = jwt.sign(
+      {
+        userId: userExist._id,
+        email,
+      },
+      process.env.JWT_SECRET,
+    );
+
+    if (token) {
+      return res.status(200).json({
+        token,
+        message: "User logged in successfuly",
+      });
+    }
+  } catch (e) {
+    console.error("Error while logging in", e);
+    return res.status(500).json({
+      message: "Internal server error",
     });
-}
-}
+  }
+};
