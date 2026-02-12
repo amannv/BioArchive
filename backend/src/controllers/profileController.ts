@@ -5,7 +5,7 @@ import { uploadOnCloudinary } from "../utils/cloudinaryService.js";
 export const setupProfile = async (req: Request, res: Response) => {
   try {
     const userId = req.userId;
-    const avatar = req.file;
+    const avatar = req.file?.path;
     const { username, firstName, lastName, bio } = req.body;
     if (!userId) {
       return res.status(401).json({
@@ -19,7 +19,7 @@ export const setupProfile = async (req: Request, res: Response) => {
       });
     }
 
-    const imageUploaded = await uploadOnCloudinary(avatar.path);
+    const imageUploaded = await uploadOnCloudinary(avatar);
 
     if (!imageUploaded) {
       return res.status(400).json({
