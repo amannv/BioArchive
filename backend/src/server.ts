@@ -8,8 +8,10 @@ app.use(express.json());
 connectDB();
 
 import userRouter from "./routes/userRoute.js";
+import profileRouter from "./routes/profileRoute.js";
 
 app.use("/api/v1/user", userRouter)
+app.use("/api/v1/profile", profileRouter);
 
 app.listen(process.env.PORT, () => {
     console.log("Server is Running on PORT " + process.env.PORT);
