@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import { userModel } from "../models/userSchema.js";
 import { profileModel } from "../models/profileSchema.js";
 import z from "zod";
+import { blogPageModel } from "../models/blogPageSchema.js";
 
 export const signupUser = async (req: Request, res: Response) => {
   try {
@@ -42,6 +43,9 @@ export const signupUser = async (req: Request, res: Response) => {
 
     if (response) {
       await profileModel.create({
+        userId: response._id,
+      });
+      await blogPageModel.create({
         userId: response._id,
       });
       return res.status(201).json({

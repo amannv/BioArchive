@@ -1,9 +1,10 @@
 import mongoose from "mongoose";
 
 const blogPageSchema = new mongoose.Schema({
-    username: { type: String, required: true, unique: true },
+    avatar: { type: String, default: "" },
+    username: { type: String, default: "", unique: true },
     github: { type: String, default: "" },
-    instgram: { type: String, default: "" },
+    instagram: { type: String, default: "" },
     linkedin: { type: String, default: "" },
     twitter: { type: String, default: "" },
     blogPosts: { type: [mongoose.Schema.ObjectId], default: [] },
