@@ -5,7 +5,6 @@ import { userModel } from "../models/userSchema.js";
 import { profileModel } from "../models/profileSchema.js";
 import z from "zod";
 
-
 export const signupUser = async (req: Request, res: Response) => {
   try {
     const requiredBody = z.object({

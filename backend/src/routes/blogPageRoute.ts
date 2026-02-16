@@ -1,5 +1,8 @@
 import { Router } from "express";
-import { getBlogPage, setupBlogPage } from "../controllers/blogPageControlller.js";
+import {
+  getBlogPage,
+  setupBlogPage,
+} from "../controllers/blogPageControlller.js";
 import { userMiddleware } from "../middleware/userMiddleware.js";
 const blogPageRouter = Router();
 
