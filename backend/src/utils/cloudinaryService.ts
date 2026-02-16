@@ -15,7 +15,6 @@ export const uploadOnCloudinary = async (localFilePath: string) => {
     const response = await cloudinary.uploader.upload(localFilePath, {
       resource_type: "image",
     });
-    console.log("File is uploaded on cloudinary", response.url);
     return response;
   } catch (e) {
     console.error("Error while uploading image", e );

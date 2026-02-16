@@ -7,7 +7,6 @@ const blogPageSchema = new mongoose.Schema({
     instagram: { type: String, default: "" },
     linkedin: { type: String, default: "" },
     twitter: { type: String, default: "" },
-    blogPosts: { type: [mongoose.Schema.ObjectId], default: [] },
     userId: { type: mongoose.Schema.ObjectId, ref: "User" },
 })
 

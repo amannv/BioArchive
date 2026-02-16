@@ -1,6 +1,7 @@
 import { type Request, type Response } from "express";
 import { profileModel } from "../models/profileSchema.js";
 import { uploadOnCloudinary } from "../utils/cloudinaryService.js";
+import { blogPageModel } from "../models/blogPageSchema.js";
 
 export const setupProfile = async (req: Request, res: Response) => {
   try {
