@@ -14,6 +14,7 @@ export const uploadOnCloudinary = async (localFilePath: string) => {
     if (!localFilePath) return null;
     const response = await cloudinary.uploader.upload(localFilePath, {
       resource_type: "image",
+      folder: "blogs"
     });
     return response;
   } catch (e) {

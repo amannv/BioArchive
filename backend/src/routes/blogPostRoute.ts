@@ -11,7 +11,7 @@ const blogPostRouter = Router();
 blogPostRouter.post(
   "/create",
   userMiddleware,
-  upload.array("images", 8),
+  upload.array("images", 5),
   createBlog,
 );
 blogPostRouter.patch("/update/:id", userMiddleware, updateBlog);
