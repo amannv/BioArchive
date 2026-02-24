@@ -24,3 +24,20 @@ export const uploadOnCloudinary = async (localFilePath: string) => {
     fs.unlinkSync(localFilePath);
   }
 };
+
+export const deleteFromCloudinary = async (publicId: string) => {
+  try {
+    if(!publicId) return false;
+    const imagesDeleted = await cloudinary.uploader.destroy(publicId);
+    if (imagesDeleted.result === "ok") {
+      console.log("Images deleted successfully");
+      return true;
+    } else {
+      console.log("Failed to delete images");
+      return false;
+    }
+  } catch(e) {
+    console.error("Error while deleting images", e);
+    return false;
+  }
+}

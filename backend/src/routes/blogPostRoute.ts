@@ -14,7 +14,7 @@ blogPostRouter.post(
   upload.array("images", 5),
   createBlog,
 );
-blogPostRouter.patch("/update/:id", userMiddleware, updateBlog);
+blogPostRouter.patch("/update/:id", userMiddleware, upload.array("images", 5), updateBlog);
 blogPostRouter.delete("/delete/:id", userMiddleware, deleteBlog);
 
 export default blogPostRouter;
