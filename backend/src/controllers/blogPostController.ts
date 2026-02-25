@@ -86,6 +86,7 @@ export const updateBlog = async (req: Request, res: Response) => {
 
     const blogFound = await blogPostModel.findOne({
       _id: id,
+      userId: userId,
     });
 
     if (!blogFound) {
@@ -167,6 +168,7 @@ export const deleteBlog = async (req: Request, res: Response) => {
 
     const blogFound = await blogPostModel.findOne({
       _id: id,
+      userId: userId,
     });
 
     if (!blogFound) {
