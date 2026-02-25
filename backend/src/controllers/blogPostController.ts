@@ -27,10 +27,12 @@ export const createBlog = async (req: Request, res: Response) => {
     const blogpage = await blogPageModel.findOne({ userId: userId });
 
     if (!blogpage) {
-      return res.status(400).json({
+      return res.status(404).json({
         message: "Blogpage not found",
       });
     }
+
+    const blogPageId = blogpage._id;
 
     const imageUrls = await Promise.all(
       images.map(async (image) => {
@@ -41,14 +43,6 @@ export const createBlog = async (req: Request, res: Response) => {
         };
       }),
     );
-
-    if (!blogpage) {
-      return res.status(404).json({
-        message: "Blogpage not found",
-      });
-    }
-
-    const blogPageId = blogpage._id;
 
     const postCreated = await blogPostModel.create({
       title,
@@ -100,7 +94,13 @@ export const updateBlog = async (req: Request, res: Response) => {
       });
     }
 
-    let imageUrls = blogFound.images;
+    let imageUrls: { url: string; public_id: string }[] = blogFound.images.map(
+      (img) => ({
+        url: img.url,
+        public_id: img.public_id,
+      }),
+    );
+
     let newImagesUploaded = false;
 
     if (images.length > 0) {
@@ -154,4 +154,40 @@ export const updateBlog = async (req: Request, res: Response) => {
   }
 };
 
-export const deleteBlog = async (req: Request, res: Response) => {};
+export const deleteBlog = async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id;
+    const userId = req.userId;
+
+    if (!userId) {
+      return res.status(401).json({
+        message: "Unauthorized",
+      });
+    }
+
+    const blogFound = await blogPostModel.findOne({
+      _id: id,
+    });
+
+    if (!blogFound) {
+      return res.status(400).json({
+        message: "Blog don't exists",
+      });
+    }
+
+    await Promise.all(
+      blogFound.images.map((img) => deleteFromCloudinary(img.public_id)),
+    );
+
+    await blogFound.deleteOne();
+
+    return res.status(200).json({
+      message: "Blog deleted successfully",
+    });
+  } catch (e) {
+    console.error("Error while deleting blog", e);
+    return res.status(500).json({
+      message: "Internal server error while deleting blog",
+    });
+  }
+};
