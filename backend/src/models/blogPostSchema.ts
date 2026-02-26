@@ -1,6 +1,4 @@
 import mongoose, { mongo } from "mongoose";
-import { string } from "zod";
-import { required } from "zod/mini";
 
 const blogPostSchema = new mongoose.Schema(
   {
