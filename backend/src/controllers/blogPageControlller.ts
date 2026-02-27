@@ -76,7 +76,7 @@ export const getBlogPage = async (req: Request, res: Response) => {
       blogPageId: blogPageId,
     });
 
-    if (!blogPosts) {
+    if (blogPosts.length === 0) {
       return res.status(200).json({
         message: "This user don't have any blogs",
       });
