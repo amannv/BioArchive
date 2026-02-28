@@ -49,7 +49,7 @@ export const createBlog = async (req: Request, res: Response) => {
       body,
       blogPageId: blogPageId,
       images: imageUrls,
-      userId: userId
+      userId: userId,
     });
 
     if (postCreated) {
