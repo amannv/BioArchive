@@ -64,10 +64,16 @@ export const setupProfile = async (req: Request, res: Response) => {
 
 export const getProfile = async (req: Request, res: Response) => {
   try {
-    const userId = req.userId;
+    const username = req.params.username;
+
+    if(!username) {
+      return res.status(404).json({
+        message: "profile don't exist"
+      });
+    }
 
     const userData = await profileModel.findOne({
-      userId: userId,
+      username: username,
     });
 
     if (userData) {

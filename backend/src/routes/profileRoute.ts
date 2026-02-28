@@ -5,6 +5,6 @@ import { upload } from "../middleware/multer.middleware.js";
 const profileRouter = Router();
 
 profileRouter.patch("/", userMiddleware, upload.single("avatar"), setupProfile);
-profileRouter.get("/me", userMiddleware, getProfile);
+profileRouter.get("/:username", userMiddleware, getProfile);
 
 export default profileRouter;
